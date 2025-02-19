@@ -16,10 +16,13 @@ const IS_LIVE = process.env.IS_LIVE;
 const app = express();
 
 app.use(morgan("dev"))
+
+
+const allowed = ["https://chat-app-net.vercel.app","*"]
 const server = http.createServer(app);
 const io  = new Server(server, {
   cors: {
-    origin: "*",
+    origin: allowed,
     methods: ["GET", "POST"],
     credentials: true
   },
@@ -134,7 +137,7 @@ io.on('connection', (socket) => {
   });
 });
 
-const allowed = ["https://chat-app-net.vercel.app","*"]
+
 app.use(cors({
   origin: allowed,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
