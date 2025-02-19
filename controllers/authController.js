@@ -49,6 +49,7 @@ async function login(req, res) {
             return res.status(200).json({status: 0, message: "Invalid password"});
         }
 
+        // console.log(process.env.SCRETE_KEY);
         const token = jwt.sign({id: user._id}, process.env.SCRETE_KEY, {expiresIn: "1h"});
 
         return res.status(200).json({status: 1, message: "Login successful", token , user: {name: user.name, email: user.email, _id: user._id}});    
@@ -61,10 +62,32 @@ async function login(req, res) {
 }
 
 
+async function getAllUsers(req, res) {
+    try {
+        const users = await user_model.find({}, { password: 0 }); // Exclude password field
+        
+        if (!users || users.length === 0) {
+            return res.status(200).json({ status: 0, message: "No users found" });
+        }
+
+        return res.status(200).json({ 
+            status: 1, 
+            message: "Users fetched successfully",
+            users: users
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error.message);
+    }
+}
+
+
 
 
 
 export default {
     register,
-    login
+    login,
+    getAllUsers
 }

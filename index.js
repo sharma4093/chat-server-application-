@@ -8,11 +8,14 @@ import mongoose from 'mongoose';
 import user_model from './models/user_model.js';
 import connectDB from './database/db_connection.js';
 import Message_model from './models/Message_model.js';
+import morgan from 'morgan';
 
 const PORT = process.env.PORT;
 const IS_LIVE = process.env.IS_LIVE;
 
 const app = express();
+
+app.use(morgan("dev"))
 const server = http.createServer(app);
 const io  = new Server(server, {
   cors: {
@@ -77,6 +80,7 @@ io.on('connection', (socket) => {
         isRead: false
       });
       await message.save();
+      console.log("message",message)
 
       // If receiver is online, send them the message
       const receiverData = onlineUsers.get(receiverId);

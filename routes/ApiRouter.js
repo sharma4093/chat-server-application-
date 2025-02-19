@@ -6,8 +6,9 @@ import mongoose from 'mongoose';
 const apiRouter = express.Router();
 
 // Auth routes
-apiRouter.post('/register', authController.register);
+apiRouter.post('/signup', authController.register);
 apiRouter.post('/login', authController.login);
+apiRouter.get('/all-users',authController.getAllUsers)
 
 // Get chat history between two users
 apiRouter.get('/messages/:userId1/:userId2', async (req, res) => {
@@ -50,5 +51,22 @@ apiRouter.get('/unread-count/:userId', async (req, res) => {
     res.status(500).json({ error: 'Error fetching unread counts' });
   }
 });
+
+
+// Get all users
+apiRouter.get('/users', async (req, res) => {
+  try {
+    const users = await user_model.find({}, { password: 0 }); // Exclude password field
+    
+    if (!users || users.length === 0) {
+      return res.status(404).json({ message: "No users found" });
+    }
+
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching users' });
+  }
+});
+
 
 export default apiRouter;
