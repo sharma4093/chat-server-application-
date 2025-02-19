@@ -1,13 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import "dotenv/config";
-import connectDB from './DB/db.js';
 import apiRouter from './routes/ApiRouter.js';
 import { Server } from 'socket.io';
 import http from 'http';
 import mongoose from 'mongoose';
-import Message from './models/Message.js';
-import User from './models/User.js';
+import user_model from './models/user_model.js';
+import connectDB from './database/db_connection.js';
+import Message_model from './models/Message_model.js';
 
 const PORT = process.env.PORT;
 const IS_LIVE = process.env.IS_LIVE;
@@ -68,7 +68,9 @@ io.on('connection', (socket) => {
         return;
       }
 
-      const message = new Message({
+      
+
+      const message = new Message_model({
         sender: senderId,
         receiver: receiverId,
         content: content,
@@ -92,7 +94,7 @@ io.on('connection', (socket) => {
   // Handle message read status
   socket.on('mark_as_read', async (messageId) => {
     try {
-      const message = await Message.findByIdAndUpdate(
+      const message = await Message_model.findByIdAndUpdate(
         messageId,
         { 
           isRead: true,
@@ -133,6 +135,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   credentials: true
 }));
+
 connectDB();
 app.use(express.json());
 
