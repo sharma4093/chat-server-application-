@@ -134,11 +134,12 @@ io.on('connection', (socket) => {
   });
 });
 
-// app.use(cors({
-//   origin: '*',
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-//   credentials: true
-// }));
+const allowed = ["https://chat-app-net.vercel.app","*"]
+app.use(cors({
+  origin: allowed,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  credentials: true
+}));
 
 connectDB();
 app.use(express.json());
