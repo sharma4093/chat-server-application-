@@ -20,15 +20,17 @@ app.use(morgan("dev"))
 
 const allowed = ["https://chat-app-net.vercel.app","*"]
 const server = http.createServer(app);
-const io  = new Server(server, {
-  cors: {
-    origin: allowed,
-    methods: ["GET", "POST"],
-    credentials: true
-  },
-  pingTimeout: 60000,
-  pingInterval: 25000
-});
+const io  = new Server(server,
+//                        {
+//   cors: {
+//     origin: allowed,
+//     methods: ["GET", "POST"],
+//     credentials: true
+//   },
+//   pingTimeout: 60000,
+//   pingInterval: 25000
+// }
+                      );
 
 
 // Store online users with their names
