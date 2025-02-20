@@ -8,6 +8,7 @@ import user_model from './models/user_model.js';
 import connectDB from './database/db_connection.js';
 import Message_model from './models/Message_model.js';
 import morgan from 'morgan';
+import cors from 'cors'
 
 const PORT = process.env.PORT;
 const IS_LIVE = process.env.IS_LIVE;
@@ -15,6 +16,9 @@ const IS_LIVE = process.env.IS_LIVE;
 const app = express();
 
 app.use(morgan("dev"))
+
+
+const allowed = ["https://chat-app-net.vercel.app","*"]
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -133,14 +137,12 @@ io.on('connection', (socket) => {
   });
 });
 
-// Enable CORS for all routes
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://chat-app-net.vercel.app/chat');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  res.header('Access-Control-Allow-Headers', '*');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  next();
-});
+
+app.use(cors({
+  origin: "https://chat-app-net.vercel.app/chat",
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  credentials: true
+}));
 
 connectDB();
 app.use(express.json());
