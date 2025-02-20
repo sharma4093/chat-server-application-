@@ -176,7 +176,7 @@ const server = http.createServer(app);
 const io  = new Server(server, {
   cors: {
     // origin: "*",
-    origin: ["https://chat-app-net.vercel.app"],
+    origin: ["https://chat-app-net.vercel.app","http://localhost:5173"],
     methods: ["GET", "POST"],
     credentials: true
   },
@@ -228,7 +228,7 @@ io.on('connection', (socket) => {
         return;
       }
 
-      const message = new Message({
+      const message = new Message_model({
         sender: senderId,
         receiver: receiverId,
         content: content,
@@ -290,7 +290,7 @@ io.on('connection', (socket) => {
 
 app.use(cors({
   // origin: '*',
-  origin: ["https://chat-app-net.vercel.app"],
+  origin: ["https://chat-app-net.vercel.app","http://localhost:5173"],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   credentials: true
 }));
