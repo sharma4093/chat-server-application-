@@ -175,7 +175,8 @@ const app = express();
 const server = http.createServer(app);
 const io  = new Server(server, {
   cors: {
-    origin: "*",
+    // origin: "*",
+    origin: ["https://chat-app-net.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true
   },
@@ -288,7 +289,8 @@ io.on('connection', (socket) => {
 });
 
 app.use(cors({
-  origin: '*',
+  // origin: '*',
+  origin: ["https://chat-app-net.vercel.app"],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   credentials: true
 }));
