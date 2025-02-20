@@ -1,5 +1,4 @@
 import express from 'express';
-import cors from 'cors';
 import "dotenv/config";
 import apiRouter from './routes/ApiRouter.js';
 import { Server } from 'socket.io';
@@ -17,16 +16,18 @@ const app = express();
 
 app.use(morgan("dev"))
 const server = http.createServer(app);
-const io  = new Server(server, {
+
+const io = new Server(server, {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-    credentials: true
+    origin: "https://chat-app-net.vercel.app/", // Allow all origins
+    // origin: "*", // Allow all origins
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // Allow all methods
+    credentials: true,
+    allowedHeaders: ["*"] // Allow all headers
   },
   pingTimeout: 60000,
   pingInterval: 25000
 });
-
 
 // Store online users with their names
 const onlineUsers = new Map();
@@ -70,8 +71,6 @@ io.on('connection', (socket) => {
         console.log('Invalid message data:', data);
         return;
       }
-
-      
 
       const message = new Message_model({
         sender: senderId,
@@ -134,11 +133,14 @@ io.on('connection', (socket) => {
   });
 });
 
-// app.use(cors({
-//   origin: '*',
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-//   credentials: true
-// }));
+// Enable CORS for all routes
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://chat-app-net.vercel.app/chat');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
+});
 
 connectDB();
 app.use(express.json());
